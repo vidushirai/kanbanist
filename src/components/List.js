@@ -7,6 +7,7 @@ import { Intent } from '@blueprintjs/core';
 import ListTitle from './ListTitle';
 import ListItem from './ListItem';
 import NewListItemInput from './NewListItemInput';
+import UndoBar from './UndoBar';
 import { BoardToaster } from './Toaster';
 
 import { DragAndDropTypes } from './Constants';
@@ -21,6 +22,7 @@ class List extends React.Component {
         super(props);
         this.state = {
             allChecked: false,
+            lastCompletedItem: null,
         };
     }
 
@@ -43,6 +45,20 @@ class List extends React.Component {
         const item_order = list.items.reduce((max, item) => (max > item.item_order ? max : item.item_order), 0) + 1;
 
         onAdd(list, { content, temp_id, item_order, priority: defaultPriority.key }, this.handleNewItemIsHidden);
+    };
+
+    undoItem = () => {
+        const item = this.state.lastCompletedItem;
+        const { list } = this.props;
+        this.props.onListItemUndo(list, item, this.handleNewItemIsHidden);
+    };
+
+    completeItem = item => {
+        this.setState({    
+            lastCompletedItem: item,
+        });
+        document.getElementsByClassName("UndoBar")[0].style.display = "block";
+        this.props.onListItemComplete(item);
     };
 
     handleNewItemIsHidden = reason => {
@@ -94,7 +110,6 @@ class List extends React.Component {
             sortBy,
             collaborators,
         } = this.props;
-
         // Dynamic styles
         const dynamicStyle = {};
         if (isDragging) {
@@ -125,8 +140,8 @@ class List extends React.Component {
                     break;
                 case SORT_BY.PRIORITY:
                     target = item.priority;
-                    spacerIndex = listItemToRender.findIndex(i =>
-                        isAscending ? i.priority < target : i.priority > target
+                    spacerIndex = listItemToRender.findIndex(
+                        i => (isAscending ? i.priority < target : i.priority > target)
                     );
                     break;
                 case SORT_BY.PROJECT_ORDER:
@@ -171,7 +186,7 @@ class List extends React.Component {
                                         item={item}
                                         instanceList={list}
                                         onUpdate={this.props.onListItemUpdate}
-                                        onComplete={this.props.onListItemComplete}
+                                        onComplete={this.completeItem}
                                         checked={this.state.allChecked}
                                         collaborator={collaborators.find(c => c.id === item.responsible_uid)}
                                     />
@@ -179,6 +194,7 @@ class List extends React.Component {
                             }
                         })}
                     </div>
+                    <UndoBar onUndo={this.undoItem} />
                     <NewListItemInput onAdd={this.addItem} />
                 </div>
             )
@@ -230,6 +246,7 @@ const {
     reorderList,
     updateListItem,
     completeListItem,
+    reAddListItem,
 } = listActions;
 
 const mapDispatchToProps = {
@@ -241,6 +258,7 @@ const mapDispatchToProps = {
     onListDrop: reorderList,
     onListItemUpdate: updateListItem,
     onListItemComplete: completeListItem,
+    onListItemUndo: reAddListItem,
 };
 
 export default flow(

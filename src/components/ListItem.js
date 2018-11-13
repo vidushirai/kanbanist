@@ -91,16 +91,28 @@ class ListItem extends React.Component {
         }
     };
 
-    handleCheck = () => {
+    undoCheck = () => {
         const millisToWait = 800;
         const completeInABit = wait => setTimeout(() => this.props.onComplete(this.props.item), wait);
+        //this.props.onUndo(this.props.item);
+        this.setState({
+                checked: false,
+            },
+            () => completeInABit(millisToWait)
+        );
+    }
 
+    handleCheck = () => {
+        const millisToWait = 800;
+        const completeInABit = wait => setTimeout(() => {this.props.onComplete(this.props.item);}, wait);
+        //this.props.onUndo(this.props.item);
         this.setState(
             {
                 checked: true,
             },
             () => completeInABit(millisToWait)
         );
+        //set display as visible
     };
 
     handleOnEdit = () => {
@@ -182,6 +194,7 @@ class ListItem extends React.Component {
         const classes = `ListItem pt-card pt-interactive pt-elevation-2 color-${item.project.color}`;
 
         return connectDragSource(
+            <div>
             <div style={dynamicStyle} id={item.id} className={classes}>
                 <div className="ListItem-inner">
                     <div className="ListItem-inner-top">
@@ -257,6 +270,7 @@ class ListItem extends React.Component {
                     </div>
                 </div>
                 <ReactTooltip place="bottom" effect="solid" />
+            </div>
             </div>
         );
     }
