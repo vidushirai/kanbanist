@@ -6,9 +6,23 @@
     font-style: normal;
 }
 
+:root {
+  --bg-color: #E1E8ED;
+  --pg-color: #FFFFFF;
+  --nav-heading: #30404D;
+  --board-inner-bg: #F5F8FA;
+  --toolbar-bg: #8A9BA8;
+  --drag-bg: #BFCCD6;
+  --due-date: #0D8050;
+  --list-item-inner-bottom: #C23030;
+  --list-item-spacer: #5C7080;
+  --title-text: #30404D;
+}
+
 .App {
   display: flex;
   flex-direction: column;
+
 }
 
 /* Screen reader utilities, from Bootstrap 4 */
@@ -49,8 +63,7 @@
   flex: 1;
   min-height: calc(100vh - 50px - 50px);
   margin-top: 50px;
-
-  background-color: #E1E8ED;
+  background-color: var(--bg-color);
   overflow-x: auto;
 }
 
@@ -61,7 +74,7 @@
 .page {
   width: 100%;
   min-height: calc(100vh - 100px);
-  background-color: white;
+  background-color: var(--pg-color);
   overflow: auto;
 }
 
@@ -94,7 +107,7 @@
 
 .pt-navbar-heading {
   font-size: 1.5em;
-  color: #30404D;
+  color: var(--nav-heading);
   margin-right: 10px !important;
 }
 
@@ -122,7 +135,7 @@ p {
 
 .Board-inner {
   flex: 1;
-  background-color: #F5F8FA;
+  background-color: var(--board-inner-bg);
   width: 100%;
   padding: 15px;
 }
@@ -134,7 +147,8 @@ p {
 .Toolbar {
   width: 100%;
   height: 50px;
-  background-color: #8A9BA8;
+  background-color: var(--toolbar-bg);
+
   display: flex;
   align-items: center;
   padding: 10px 15px 10px 15px;
@@ -213,6 +227,7 @@ p {
 .list-panel-title-text {
   width: 215px;
   font-family: sans-serif;
+  color: var(--title-text);
 }
 
 .list-panel-title-close-button-div {
@@ -243,7 +258,7 @@ p {
 }
 
 .DraggableList {
-  background-color: #BFCCD6;
+  background-color: var(--drag-bg);
 }
 
 .DraggableList:hover {
@@ -251,7 +266,7 @@ p {
 }
 
 .BacklogList {
-  background-color: #8A9BA8;
+  background-color: var(--toolbar-bg);
 }
 
 .ListItem {
@@ -341,19 +356,19 @@ p {
 .ListItem-project-name {
   margin-left: 7px;
   font-size: 11px;
-  color: #8A9BA8;
+  color: var(--toolbar-bg);
   margin-right: auto;
 }
 
 .ListItem-recurring-icon {
-  color: #8A9BA8;
+  color: var(--toolbar-bg);
   margin-right: 5px;
 }
 
 .ListItem-project-duedate {
   font-size: 11px;
   cursor: pointer;
-  color: #0D8050;
+  color: var(--due-date);
   margin-right: 5px;
 }
 
@@ -365,7 +380,7 @@ p {
 }
 
 .ListItem-inner-bottom .non-edit-text .overdue {
-  color: #C23030 !important;
+  color: var(--list-item-inner-bottom) !important;
 }
 
 .ListItem-text {
@@ -401,7 +416,7 @@ p {
 .list-item-spacer {
   width: 100%;
   height: 60px;
-  background-color: #5C7080;
+  background-color: var(--list-item-space);
   margin-bottom: 10px;
   border-radius: 3px;
 }
