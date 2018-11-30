@@ -10,8 +10,9 @@ export default class UndoBar extends React.Component {
 
 	static isCancelled = () => { return UndoBar.cancelled; };
 	static hideBar = () => {document.getElementsByClassName("UndoBar")[0].style.display = "none"; };
-	static showBar = () => {
+	static showBar = (string) => {
 		UndoBar.cancelled = false; 
+		document.getElementById("undoString").innerText = string;
 		document.getElementsByClassName("UndoBar")[0].style.display = "block"; 
 	};
 
@@ -19,7 +20,7 @@ export default class UndoBar extends React.Component {
 		return (
 			<div className="UndoBar">
 				<div className="UndoBarContainer">
-					<p>1 item marked as completed</p>
+					<p id="undoString"></p>
 					<a onClick={this.undoCheck}>Undo</a>
 					<a onClick={() => document.getElementsByClassName("UndoBar")[0].style.display = "none"}>Hide</a>
 				</div>

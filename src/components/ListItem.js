@@ -101,7 +101,6 @@ class ListItem extends React.Component {
             },
             () => completeInABit(millisToWait)
         );
-        UndoBar.showBar();
     };
 
     handleOnEdit = () => {

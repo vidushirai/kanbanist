@@ -43,19 +43,29 @@ const todoistPersistenceMiddleware = store => next => action => {
 
         case types.ADD_LIST_ITEM:
             function persistAddListItem() {
-                const { list, item } = action.payload;
-                const { content, temp_id } = item;
+                if (UndoBar.isCancelled() == false){
+                    const { list, item } = action.payload;
+                    const { content, temp_id } = item;
 
-                const labelString = isListBacklog(list) ? '' : `@${list.title.replaceAll(' ', '_').toLowerCase()}`;
-                const hasProjectSyntax = content.indexOf('#') >= 0;
-                const projectString =
-                    hasProjectSyntax || !defaultProject ? '' : `#${defaultProject.name.replaceAll(' ', '')}`;
+                    const labelString = isListBacklog(list) ? '' : `@${list.title.replaceAll(' ', '_').toLowerCase()}`;
+                    const hasProjectSyntax = content.indexOf('#') >= 0;
+                    const projectString =
+                        hasProjectSyntax || !defaultProject ? '' : `#${defaultProject.name.replaceAll(' ', '')}`;
 
-                Todoist.quickAddItem(token, `${content} ${labelString} ${projectString}`, temp_id)
-                    .then(() => store.dispatch(actions.fetchLists()))
-                    .catch(err => console.error('could not add item', err));
+                    Todoist.quickAddItem(token, `${content} ${labelString} ${projectString}`, temp_id)
+                        .then(() => store.dispatch(actions.fetchLists()))
+                        .catch(err => console.error('could not add item', err));
+                }
+                else {
+                    store.dispatch(actions.fetchLists());
+                }
+                UndoBar.hideBar();
             }
-            persistAddListItem();
+            UndoBar.showBar(action.type);
+            setTimeout(() =>  {
+                persistAddListItem()
+            }, 5000);
+
             break;
 
         case types.COMPLETE_LIST:
@@ -90,6 +100,7 @@ const todoistPersistenceMiddleware = store => next => action => {
                 } 
                 UndoBar.hideBar();  
             }
+            UndoBar.showBar(action.type);
             setTimeout(() =>  {
                 persistCompleteListItem()
             }, 5000);
@@ -97,11 +108,20 @@ const todoistPersistenceMiddleware = store => next => action => {
 
         case types.UPDATE_LIST_ITEM:
             function persistContentChange() {
-                const { item, text } = action.payload;
-                const updatedItem = { id: item.id, content: text };
-                Todoist.updateItem(token, updatedItem);
+                if (UndoBar.isCancelled() == false){
+                    const { item, text } = action.payload;
+                    const updatedItem = { id: item.id, content: text };
+                    Todoist.updateItem(token, updatedItem);
+                }
+                else {
+                    store.dispatch(actions.fetchLists());
+                }
+                UndoBar.hideBar();
             }
-            persistContentChange();
+            UndoBar.showBar(action.type);
+            setTimeout(() =>  {
+                persistContentChange()
+            }, 5000);
             break;
 
         case types.ADD_NEW_LIST:
