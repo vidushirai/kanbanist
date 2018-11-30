@@ -1,14 +1,13 @@
 import Todoist from '../../todoist-client/Todoist';
 import { types, actions, isListBacklog } from '../modules/lists';
 import List from '../../core/List';
+import UndoBar from '../../components/UndoBar.js';
 
 const todoistPersistenceMiddleware = store => next => action => {
-    const state = store.getState();
-    const token = state.user.user.token;
+    const state = store.getState();    const token = state.user.user.token;
     const project_id = state.lists.defaultProjectId;
     const projects = state.lists.projects;
     const defaultProject = projects.find(p => p.id === project_id);
-
     switch (action.type) {
         case types.MOVE_TO_LIST:
             function persistLabelChange() {
@@ -82,10 +81,18 @@ const todoistPersistenceMiddleware = store => next => action => {
 
         case types.COMPLETE_LIST_ITEM:
             function persistCompleteListItem() {
-                const { item } = action.payload;
-                Todoist.completeListItem(token, item.id);
+                if (UndoBar.isCancelled() == true){
+                    store.dispatch(actions.fetchLists());
+                }
+                else {
+                    const { item } = action.payload;
+                    Todoist.completeListItem(token, item.id);
+                } 
+                UndoBar.hideBar();  
             }
-            persistCompleteListItem();
+            setTimeout(() =>  {
+                persistCompleteListItem()
+            }, 5000);
             break;
 
         case types.UPDATE_LIST_ITEM:

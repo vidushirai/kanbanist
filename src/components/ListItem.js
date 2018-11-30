@@ -8,6 +8,7 @@ import $ from 'jquery';
 import ListItemDueDate from './ListItemDueDate';
 import Todoist from '../todoist-client/Todoist';
 import ReactTooltip from 'react-tooltip';
+import UndoBar from './UndoBar';
 
 const outlookRegex = /\[\[\s*outlook=id3=(.*?),([^\]]*)\]\]/;
 const isOutlookText = rawText => {
@@ -91,28 +92,16 @@ class ListItem extends React.Component {
         }
     };
 
-    undoCheck = () => {
-        const millisToWait = 800;
-        const completeInABit = wait => setTimeout(() => this.props.onComplete(this.props.item), wait);
-        //this.props.onUndo(this.props.item);
-        this.setState({
-                checked: false,
-            },
-            () => completeInABit(millisToWait)
-        );
-    }
-
     handleCheck = () => {
         const millisToWait = 800;
         const completeInABit = wait => setTimeout(() => {this.props.onComplete(this.props.item);}, wait);
-        //this.props.onUndo(this.props.item);
         this.setState(
             {
                 checked: true,
             },
             () => completeInABit(millisToWait)
         );
-        //set display as visible
+        UndoBar.showBar();
     };
 
     handleOnEdit = () => {

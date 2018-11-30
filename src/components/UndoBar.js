@@ -1,10 +1,18 @@
 import React from 'react';
 
 export default class UndoBar extends React.Component {
-
+	static cancelled = false;
+	
 	undoCheck = () => {
-		document.getElementsByClassName("UndoBar")[0].style.display = "none";
-		this.props.onUndo();
+		UndoBar.hideBar();
+		UndoBar.cancelled = true;
+	};
+
+	static isCancelled = () => { return UndoBar.cancelled; };
+	static hideBar = () => {document.getElementsByClassName("UndoBar")[0].style.display = "none"; };
+	static showBar = () => {
+		UndoBar.cancelled = false; 
+		document.getElementsByClassName("UndoBar")[0].style.display = "block"; 
 	};
 
 	render() {

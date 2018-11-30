@@ -4,6 +4,7 @@ import flow from 'lodash/flow';
 import Dimensions from 'react-dimensions';
 import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 import moment from 'moment';
+import UndoBar from './UndoBar';
 
 import Toolbar from './Toolbar';
 import ListsPanel from '../containers/ListsPanel';
@@ -215,6 +216,7 @@ class Board extends Component {
                     showBacklog={showBacklog}
                     backlogList={filteredBacklog}
                 />
+                <UndoBar cancelled={false}/>
             </div>
         );
     }

@@ -67,7 +67,6 @@ export const types = {
     MOVE_TO_LIST: 'MOVE_TO_LIST',
     UPDATE_LIST_ITEM: 'UPDATE_LIST_ITEM',
     COMPLETE_LIST_ITEM: 'COMPLETE_LIST_ITEM',
-    READD_LIST_ITEM: 'READD_LIST_ITEM',
     UPDATE_ID: 'UPDATE_ID',
     FETCH_LISTS: 'FETCH_LISTS',
     FETCH_REQUEST_SENT: 'FETCH_REQUEST_SENT',
@@ -95,8 +94,8 @@ export const actions = {
     moveToList: (toList, item, fromList) => ({ type: types.MOVE_TO_LIST, payload: { toList, item, fromList } }),
     updateListItem: (item, text) => ({ type: types.UPDATE_LIST_ITEM, payload: { item, text } }),
     completeListItem: item => ({ type: types.COMPLETE_LIST_ITEM, payload: { item } }),
-    reAddListItem: (list, item, onHidden) => ({ type: types.READD_LIST_ITEM, payload: { list, item, onHidden } }),
     fetchLists: () => (dispatch, getState) => {
+        console.log("fetchLists is called");
         const state = getState();
         dispatch(actions.fetchRequest());
         Todoist.fetch(state.user.user.token)
@@ -294,19 +293,6 @@ function completeListItem(state, action) {
     const updatedLists = lists.map(itemList => {
         return itemList.removeItem(item);
     });
-    return { ...state, lists: updatedLists };
-}
-
-function reAddListItem(state, action) {
-    const { list, item, onHidden } = action.payload;
-    const { content, temp_id, item_order } = item;
-    const { lists, projects, backlog, defaultProjectId } = state;
-
-    if (isListBacklog(list)) {
-        return { ...state, backlog: backlog.append(item) };
-    }
-
-    const updatedLists = lists.map(itemList => (itemList.id === list.id ? itemList.append(item) : itemList));
     return { ...state, lists: updatedLists };
 }
 
@@ -592,8 +578,6 @@ export const reducer = (state = initialState, action) => {
             return sortLists(updateId(state, action));
         case types.COMPLETE_LIST_ITEM:
             return completeListItem(state, action);
-        case types.READD_LIST_ITEM:
-            return reAddListItem(state, action);
 
         case types.UPDATE_LISTS_FILTER:
             return updateListsFilter(state, action);
