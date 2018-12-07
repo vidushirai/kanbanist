@@ -95,7 +95,6 @@ export const actions = {
     updateListItem: (item, text) => ({ type: types.UPDATE_LIST_ITEM, payload: { item, text } }),
     completeListItem: item => ({ type: types.COMPLETE_LIST_ITEM, payload: { item } }),
     fetchLists: () => (dispatch, getState) => {
-        console.log("fetchLists is called");
         const state = getState();
         dispatch(actions.fetchRequest());
         Todoist.fetch(state.user.user.token)
