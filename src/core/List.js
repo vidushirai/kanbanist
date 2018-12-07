@@ -3,6 +3,7 @@ import { Record, List as ImmutableList } from 'immutable';
 const ListRecord = Record({
     id: 0,
     title: '',
+    rules: [],
     items: ImmutableList.of(),
 });
 

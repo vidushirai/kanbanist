@@ -22,12 +22,13 @@ export default class ListTitle extends React.Component {
     };
 
     render() {
-        const { disabled, showListMenu, onDelete, onCompleteAll } = this.props;
+        const { disabled, showListMenu, onDelete, onCompleteAll, addRule } = this.props;
 
         const listMenu = (
             <Menu>
                 <MenuItem iconName="trash" onClick={onDelete} text="Delete list" />
                 <MenuItem iconName="tick" onClick={onCompleteAll} text="Mark all as done" />
+                <MenuItem iconName="rule" onClick={addRule} text="Add List Rule" />
             </Menu>
         );
 

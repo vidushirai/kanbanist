@@ -8,11 +8,12 @@ import ListTitle from './ListTitle';
 import ListItem from './ListItem';
 import NewListItemInput from './NewListItemInput';
 import { BoardToaster } from './Toaster';
+import ListRuleModal from './ListRuleModal.js';
 
 import { DragAndDropTypes } from './Constants';
 import { defaultPriority } from '../core/Priority';
 import { connect } from 'react-redux';
-import { actions as listActions, SORT_BY, SORT_BY_DIRECTION } from '../redux/modules/lists';
+import { actions as listActions, SORT_BY, SORT_BY_DIRECTION, RULES } from '../redux/modules/lists';
 
 const moment = require('moment');
 
@@ -21,6 +22,7 @@ class List extends React.Component {
         super(props);
         this.state = {
             allChecked: false,
+            showModal: false
         };
     }
 
@@ -41,7 +43,6 @@ class List extends React.Component {
         // Force item to bottom of list.
         // TODO: properly order and properly place empty box
         const item_order = list.items.reduce((max, item) => (max > item.item_order ? max : item.item_order), 0) + 1;
-
         onAdd(list, { content, temp_id, item_order, priority: defaultPriority.key }, this.handleNewItemIsHidden);
     };
 
@@ -73,6 +74,21 @@ class List extends React.Component {
             },
             completeAll
         );
+    };
+
+    addRule = () => {
+        this.setState({
+            showModal: true,
+        }); 
+    };
+
+    hideModal = (values) => {
+        while (this.props.list.rules.length > 0)
+            this.props.list.rules.pop();
+        for (let i in values){
+            this.props.list.rules.push(values[i]);
+        }
+        this.setState({showModal: false});
     };
 
     handleDelete = () => {
@@ -146,7 +162,6 @@ class List extends React.Component {
             spacerIndex = spacerIndex > -1 ? spacerIndex : listItemToRender.size + 1;
             listItemToRender = listItemToRender.insert(spacerIndex, { isSpacer: true, id: window.generateUUID() });
         }
-
         return connectListDropTarget(
             connectListItemDropTarget(
                 <div style={dynamicStyle} className={className + ' List list-panel-item'}>
@@ -155,6 +170,7 @@ class List extends React.Component {
                         onRename={this.handleRename}
                         onDelete={this.handleDelete}
                         onCompleteAll={this.handleCompleteAll}
+                        addRule={this.addRule}
                         disabled={!canEditTitle}
                         showListMenu={showListMenu}
                     />
@@ -179,7 +195,9 @@ class List extends React.Component {
                             }
                         })}
                     </div>
-                    <NewListItemInput onAdd={this.addItem} />
+                    <NewListItemInput onAdd={this.addItem} rules={this.state.rules}/>
+                    <ListRuleModal show={this.state.showModal} handleClose={this.hideModal} list={this.props.list}>
+                    </ListRuleModal>
                 </div>
             )
         );
@@ -205,7 +223,30 @@ List.defaultProps = {
 const listItemTarget = {
     drop(props, monitor) {
         const { item, instanceList } = monitor.getItem();
-        props.onListItemDrop(props.list, item, instanceList);
+        let move = true;
+        for (let element in props.list.rules){
+            switch(props.list.rules[element]){
+                case RULES.DUE_DATE_REQUIRED:
+                    if (item.due_date_utc == null)
+                        alert("Item must have a due date to be moved here!");
+                        move=false;
+                    break;
+                case RULES.URGENT:
+                    //item.priority = 1;
+                    if (item.priority != 1)
+                        alert("Item must have priority level 1 to be moved here!");
+                    break;
+                case RULES.BACKLOG:
+                    //item.due_date_utc = null;
+                    break;
+                case RULES.DUE_EOW:
+                    //can't change the utc - find a workaround
+                    break;
+            }
+        }
+        if (move){
+            props.onListItemDrop(props.list, item, instanceList);
+        }
     },
 };
 

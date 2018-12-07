@@ -17,6 +17,14 @@ export const isInboxProject = project => {
     return project.name === 'Inbox';
 };
 
+export const RULES = {
+    URGENT: 'Priority 1',
+    DUE_DATE_REQUIRED: 'Due Date Required',
+    DUE_EOW: 'Due at the end of the week',
+    BACKLOG: 'Remove due date',
+    NONE: 'None',
+};
+
 export const SORT_BY = {
     DATE_ADDED: 'Date Added',
     DUE_DATE: 'Due Date',
