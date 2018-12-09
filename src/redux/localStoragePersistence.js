@@ -29,6 +29,8 @@ export function load() {
     const loadedState = {};
     if (localStorage[LOCAL_STORAGE_NAMESPACE]) {
         const jsState = JSON.parse(localStorage[LOCAL_STORAGE_NAMESPACE]);
+        console.log("JSSTATE, tryna understand localStorage", jsState);
+        console.log("jsState.lists.lists", jsState.lists.lists);
 
         // Versioning - by bumping the version number I can force a clean load when someone visits the site.
         // TODO: maintain the user so another login isn't required.
@@ -51,6 +53,7 @@ export function load() {
                 return new List({
                     id: listObject.id,
                     title: listObject.title,
+                    rules: listObject.rules,
                     items: Immutable.List(listItems),
                 });
             })
@@ -60,6 +63,7 @@ export function load() {
         loadedState.lists.backlog = new List({
             id: 0,
             title: 'Backlog',
+            rules: [],
             items: Immutable.List(backlogItems),
         });
 

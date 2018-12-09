@@ -61,6 +61,7 @@ export const configureStore = () => {
     // then we don't and the next store save will overwrite.
     let initialState = {};
     try {
+        console.log("loading the initial state, i assume this only happens once?");
         initialState = load();
     } catch (ex) {
         console.error('Could not load initialState from localStorage.', ex);
@@ -68,7 +69,7 @@ export const configureStore = () => {
     }
 
     const store = createStore(reducer, initialState, middleware);
-
+    console.log("do i come here on toggle?");
     const actions = {
         lists: bindActionCreators(lists.actions, store.dispatch),
         user: bindActionCreators(user.actions, store.dispatch),

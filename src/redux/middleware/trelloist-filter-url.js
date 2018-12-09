@@ -16,7 +16,7 @@ export function generateQueryString({
     namedFilter,
 }) {
     const queryParams = {};
-
+    console.log("When do I get here?");
     if (!filteredLists.isEmpty()) {
         const visibleLists = lists
             .filter(list => !filteredLists.map(el => el.id).contains(list.id))

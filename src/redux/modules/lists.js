@@ -68,6 +68,7 @@ const initialState = {
 
 export const types = {
     ADD_NEW_LIST: 'ADD_NEW_LIST',
+    ADD_LIST_RULES: 'ADD_LIST_RULES',
     RENAME_LIST: 'RENAME_LIST',
     COMPLETE_LIST: 'COMPLETE_LIST',
     REORDER_LIST: 'REORDER_LIST',
@@ -95,6 +96,7 @@ export const types = {
 
 export const actions = {
     addList: newList => ({ type: types.ADD_NEW_LIST, payload: newList }),
+    addListRules: (list, newRules) => ({ type: types.ADD_LIST_RULES, payload: { list, newRules }}),
     renameList: (list, newListName) => ({ type: types.RENAME_LIST, payload: { list, newListName } }),
     completeList: list => ({ type: types.COMPLETE_LIST, payload: { list } }),
     reorderList: (list, newSibling) => ({ type: types.REORDER_LIST, payload: { list, newSibling } }),
@@ -152,8 +154,29 @@ function addList(state, action) {
         titleAlreadyUsed = state.lists.map(list => list.title).contains(title);
     }
 
-    const newList = new List({ title, id: temp_id, items: ImmutableList.of() });
+    const newList = new List({ title, id: temp_id, rules: [], items: ImmutableList.of() });
     return { ...state, lists: state.lists.push(newList) };
+}
+
+function addListRules(state, action) {
+    const { list, newRules } = action.payload;
+    // const rules = newRules.map(rule => {
+    //     let duplicateRule = list.rules.find(el => el === rule);
+    //     console.log("duplicateRule", duplicateRule);
+    //     if (!duplicateRule)
+    //         return rule;
+    // });
+    const rules = newRules;
+    //assuming rules is the udpated set of rules and will replace what currently exists
+    const updatedLists = state.lists.map(itemList => {
+        if (itemList.id === list.id) {
+            const { id, title, items } = list;
+            return new List({ id, title, rules, items });
+        } else {
+            return itemList;
+        }
+    });
+    return { ...state, lists: updatedLists };
 }
 
 function renameList(state, action) {
@@ -170,8 +193,9 @@ function renameList(state, action) {
 
     const updatedLists = state.lists.map(itemList => {
         if (itemList.id === list.id) {
-            const { id, items } = itemList;
-            return new List({ id, items, title });
+            const { id, items, rules } = itemList;
+            console.log("In Rename, rules are: ", rules);
+            return new List({ id, items, rules, title });
         } else {
             return itemList;
         }
@@ -284,6 +308,7 @@ function moveToList(state, action) {
 
 function updateListItem(state, action) {
     const { item, text } = action.payload;
+    console.log("Need to update list item");
     const updatedLists = state.lists.map(itemList => itemList.updateItem(item, item.updateWith({ text })));
     return { ...state, lists: updatedLists };
 }
@@ -568,6 +593,8 @@ export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case types.ADD_NEW_LIST:
             return addList(state, action);
+        case types.ADD_LIST_RULES:
+            return addListRules(state, action);
         case types.RENAME_LIST:
             return renameList(state, action);
         case types.DELETE_LIST:

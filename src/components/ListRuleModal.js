@@ -4,10 +4,10 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 
 const options = [
-  {value: RULES.DUE_DATE_REQUIRED, label: 'Due Date Required'},
-  {value: RULES.URGENT, label: 'Priority 1'},
-  {value: RULES.DUE_EOW, label: 'Due at the End of the Week'},
-  {value: RULES.BACKLOG, label: 'Clear Due Date'}
+  {value: RULES.DUE_DATE_REQUIRED, label: RULES.DUE_DATE_REQUIRED},
+  {value: RULES.URGENT, label: RULES.URGENT},
+  {value: RULES.DUE_EOW, label: RULES.DUE_EOW},
+  {value: RULES.BACKLOG, label: RULES.BACKLOG}
 ];
 
 export default class ListRuleModal extends React.Component {
@@ -15,17 +15,30 @@ export default class ListRuleModal extends React.Component {
     super(props);
     this.state = ({
       values: [],
+      defaultValue: [],
     });
   }
 
   handleChange = (selectedOptions) => {
-    console.log(selectedOptions);
-    this.state.values = [];
+    let selected = [];
     for (let i in selectedOptions){
-      this.state.values.push(selectedOptions[i].value);
+      selected.push(selectedOptions[i].value);
     }
-    console.log("values", this.state.values);
+    this.setState({
+      values: selected,
+      defaultValue: selected,
+    });
   };
+
+  componentDidMount(){
+/*    let defaultOptions = [];
+    this.props.list.rules.map(rule => {
+      defaultOptions.push({value: rule, label: rule});
+    });
+    this.setState({
+      defaultValue: defaultOptions,
+    });*/
+  }
 
   render(){
     return (
@@ -39,6 +52,7 @@ export default class ListRuleModal extends React.Component {
             classNamePrefix="select"
             onChange={this.handleChange}
             components={makeAnimated()}
+            
           />
           <div className="modal-buttons">
             <button onClick={() => this.props.handleClose(this.state.values)}> Close </button>

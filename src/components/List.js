@@ -83,12 +83,13 @@ class List extends React.Component {
     };
 
     hideModal = (values) => {
-        while (this.props.list.rules.length > 0)
-            this.props.list.rules.pop();
-        for (let i in values){
-            this.props.list.rules.push(values[i]);
-        }
+        // while (this.props.list.rules.length > 0)
+        //     this.props.list.rules.pop();
+        // for (let i in values){
+        //     this.props.list.rules.push(values[i]);
+        // }
         this.setState({showModal: false});
+        this.props.onAddListRules(this.props.list, values);
     };
 
     handleDelete = () => {
@@ -264,6 +265,7 @@ const mapStateToProps = state => ({
 
 const {
     addListItem,
+    addListRules,
     renameList,
     deleteList,
     completeList,
@@ -275,6 +277,7 @@ const {
 
 const mapDispatchToProps = {
     onAdd: addListItem,
+    onAddListRules: addListRules,
     onListRename: renameList,
     onListDelete: deleteList,
     onListCompleteAll: completeList,
