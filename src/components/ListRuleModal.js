@@ -31,21 +31,29 @@ export default class ListRuleModal extends React.Component {
   };
 
   componentDidMount(){
-/*    let defaultOptions = [];
+    let defaultOptions = [];
     this.props.list.rules.map(rule => {
       defaultOptions.push({value: rule, label: rule});
     });
     this.setState({
       defaultValue: defaultOptions,
-    });*/
+    });
   }
 
   render(){
     return (
       <div className={this.props.show ? 'modal display-block' : 'modal display-none'}>
         <section className='modal-main'>
-          <h1>Apply Rules for {this.props.list.title}</h1>
+          <h1>Existing Rules for {this.props.list.title}</h1>
+          <ul>
+              {this.props.list.rules.map(rule => {
+                return <li key={this.props.list.rules.indexOf(rule)}>{rule}</li>;
+              })}
+          </ul>
+          <hr />
+          <h2>Apply Rules for {this.props.list.title}</h2>
           <Select
+            defaultValue={this.state.defaultValue}
             isMulti
             options={options}
             className="basic-multi-select"

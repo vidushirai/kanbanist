@@ -48,7 +48,6 @@ class List extends React.Component {
 
     handleNewItemIsHidden = reason => {
         BoardToaster.show({ message: reason, intent: Intent.WARNING, timeout: 5000 });
-        console.log('HELO!');
     };
 
     handleRename = newName => {
@@ -224,30 +223,7 @@ List.defaultProps = {
 const listItemTarget = {
     drop(props, monitor) {
         const { item, instanceList } = monitor.getItem();
-        let move = true;
-        for (let element in props.list.rules){
-            switch(props.list.rules[element]){
-                case RULES.DUE_DATE_REQUIRED:
-                    if (item.due_date_utc == null)
-                        alert("Item must have a due date to be moved here!");
-                        move=false;
-                    break;
-                case RULES.URGENT:
-                    //item.priority = 1;
-                    if (item.priority != 1)
-                        alert("Item must have priority level 1 to be moved here!");
-                    break;
-                case RULES.BACKLOG:
-                    //item.due_date_utc = null;
-                    break;
-                case RULES.DUE_EOW:
-                    //can't change the utc - find a workaround
-                    break;
-            }
-        }
-        if (move){
-            props.onListItemDrop(props.list, item, instanceList);
-        }
+        props.onListItemDrop(props.list, item, instanceList);
     },
 };
 

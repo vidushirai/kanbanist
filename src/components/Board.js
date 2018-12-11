@@ -54,6 +54,7 @@ class Board extends Component {
 
         const atBoard = this.props.location.pathname === '/board';
         const shouldShowToolbar = atBoard && showToolbar;
+        console.log("This is where my loaded state shows up:", lists);
 
         const dynamicStyle = {};
         if (shouldShowToolbar) {

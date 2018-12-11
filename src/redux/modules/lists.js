@@ -25,6 +25,35 @@ export const RULES = {
     NONE: 'None',
 };
 
+export const updateItemByRules = (rules, item) => {
+    //need to remove stuff if the rule doesn't apply anymore
+    let updatedItem = item;
+    rules.map(el => {
+        switch(el){
+            case RULES.URGENT:
+                let priority = 4;
+                updatedItem = item.updateWith({ priority });
+                break;
+            case RULES.DUE_EOW:
+                const today = moment();
+                let due_date_utc = today.endOf('week');
+                updatedItem = item.updateWith({ due_date_utc });
+                break;
+            case RULES.BACKLOG:
+                due_date_utc = null;
+                updatedItem = item.updateWith({ due_date_utc });
+                break;
+            case RULES.DUE_DATE_REQUIRED:
+                due_date_utc = moment();
+                updatedItem = item.updateWith({ due_date_utc });
+                break;
+            default:
+            //None
+        }
+    });
+    return updatedItem;
+};
+
 export const SORT_BY = {
     DATE_ADDED: 'Date Added',
     DUE_DATE: 'Due Date',
@@ -170,12 +199,16 @@ function addListRules(state, action) {
     //assuming rules is the udpated set of rules and will replace what currently exists
     const updatedLists = state.lists.map(itemList => {
         if (itemList.id === list.id) {
-            const { id, title, items } = list;
+            let { id, title, items } = list;
+            items = items.map(el => {
+                return updateItemByRules(rules, el);
+            });
             return new List({ id, title, rules, items });
         } else {
             return itemList;
         }
     });
+
     return { ...state, lists: updatedLists };
 }
 
@@ -293,22 +326,24 @@ function moveToList(state, action) {
         newBacklog = backlog.prepend(item);
     }
 
+    const updatedItem = updateItemByRules(toList.rules, item);
+
     const updatedLists = lists.map(itemList => {
         if (itemList.id === fromList.id) {
             return itemList.removeItem(item);
         }
         if (itemList.id === toList.id) {
-            return itemList.append(item);
+            return itemList.append(item).updateItem(item, updatedItem);
         }
         return itemList;
     });
+
 
     return { ...state, backlog: newBacklog, lists: updatedLists };
 }
 
 function updateListItem(state, action) {
     const { item, text } = action.payload;
-    console.log("Need to update list item");
     const updatedLists = state.lists.map(itemList => itemList.updateItem(item, item.updateWith({ text })));
     return { ...state, lists: updatedLists };
 }

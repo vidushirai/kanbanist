@@ -1,5 +1,5 @@
 import Todoist from '../../todoist-client/Todoist';
-import { types, actions, isListBacklog } from '../modules/lists';
+import { types, actions, isListBacklog, updateItemByRules } from '../modules/lists';
 import List from '../../core/List';
 
 const todoistPersistenceMiddleware = store => next => action => {
@@ -13,11 +13,13 @@ const todoistPersistenceMiddleware = store => next => action => {
         case types.MOVE_TO_LIST:
             function persistLabelChange() {
                 const { toList, item, fromList } = action.payload;
-
                 // no-op if user puts item back where it was
                 if (toList.id === fromList.id) {
                     return;
                 }
+
+                // apply list rule changes
+                let newItem = updateItemByRules(toList.rules, item);
 
                 // get all labels for item
                 const existingItemLabels = state.lists.lists
@@ -36,7 +38,8 @@ const todoistPersistenceMiddleware = store => next => action => {
 
                 labels = labels.toSet().toArray();
 
-                const updatedItem = { id: item.id, labels };
+                const updatedItem = { id: item.id, priority: newItem.priority, due_date_utc: newItem.due_date_utc, labels };
+
                 return Todoist.updateItem(token, updatedItem);
             }
             persistLabelChange();
@@ -170,6 +173,17 @@ const todoistPersistenceMiddleware = store => next => action => {
             }
             persistListReorder();
             break;
+        
+        case types.ADD_LIST_RULES:
+        function persistListItemChange() {
+            const { list, newRules } = action.payload;
+            list.items.map(el => {
+                return Todoist.updateItem(token, updateItemByRules(newRules, el));
+            });
+        }
+        persistListItemChange();
+        break;
+
         default:
         // Nothing.
     }

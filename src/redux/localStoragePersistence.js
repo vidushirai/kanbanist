@@ -29,8 +29,6 @@ export function load() {
     const loadedState = {};
     if (localStorage[LOCAL_STORAGE_NAMESPACE]) {
         const jsState = JSON.parse(localStorage[LOCAL_STORAGE_NAMESPACE]);
-        console.log("JSSTATE, tryna understand localStorage", jsState);
-        console.log("jsState.lists.lists", jsState.lists.lists);
 
         // Versioning - by bumping the version number I can force a clean load when someone visits the site.
         // TODO: maintain the user so another login isn't required.
@@ -50,6 +48,7 @@ export function load() {
         loadedState.lists.lists = Immutable.List(
             jsState.lists.lists.map(listObject => {
                 const listItems = listObject.items.map(itemObj => new Item(itemObj));
+                console.log("list is loaded here from local storage: ", listObject.title, listObject.rules);
                 return new List({
                     id: listObject.id,
                     title: listObject.title,
@@ -153,6 +152,6 @@ export function load() {
         // ui
         loadedState.ui = jsState.ui;
     }
-
+    console.log("Tryna localize, by here this is my loadedState", loadedState.lists.lists);
     return loadedState;
 }

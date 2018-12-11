@@ -28,7 +28,7 @@ export default class ListTitle extends React.Component {
             <Menu>
                 <MenuItem iconName="trash" onClick={onDelete} text="Delete list" />
                 <MenuItem iconName="tick" onClick={onCompleteAll} text="Mark all as done" />
-                <MenuItem iconName="rule" onClick={addRule} text="Add List Rule" />
+                <MenuItem iconName="add" onClick={addRule} text="Add List Rule" />
             </Menu>
         );
 
