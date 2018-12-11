@@ -27,6 +27,7 @@ class Header extends React.Component {
             />
         );
 
+        //Added a button to the header that toggles between Light and Dark Theme based on the local storage value
         const themeButton = (
             <AnchorButton
                 className="light-text header-right"

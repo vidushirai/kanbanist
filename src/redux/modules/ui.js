@@ -11,6 +11,7 @@ const initialState = {
     darkTheme: false,
 };
 
+//takes a hex color code and compute its inverse color
 function invertHex(hexnum){
   hexnum = hexnum.substring(hexnum.indexOf('#')+1);
   if(hexnum.length != 6) {
@@ -44,6 +45,7 @@ function invertHex(hexnum){
   return resultnum;
 }
 
+//changes the theme of the kanban board
 export const changeTheme = () => {
     //change colors
     let rootStyle = getComputedStyle(root);
@@ -71,6 +73,7 @@ export const reducer = (state = initialState, action) => {
         case types.TOGGLE_BACKLOG:
             return { ...state, showBacklog: !state.showBacklog };
         case types.TOGGLE_THEME:
+            //changes the theme along with changing the state in local storage
             changeTheme();
             return { ...state, darkTheme: !state.darkTheme };
         case types.RESTORE_INITIAL_STATE:

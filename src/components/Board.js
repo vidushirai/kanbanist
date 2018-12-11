@@ -33,6 +33,8 @@ class Board extends Component {
             }
         }
 
+        //Added to ensure that the colors are changed when the board is first loaded according to the existing value in
+        //local storage
         if (this.props.darkTheme) {
             changeTheme();
         }
