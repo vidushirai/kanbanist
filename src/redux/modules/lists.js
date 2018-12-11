@@ -17,6 +17,7 @@ export const isInboxProject = project => {
     return project.name === 'Inbox';
 };
 
+//Hardcoded example rules that users can apply to lists
 export const RULES = {
     URGENT: 'Priority 1',
     DUE_DATE_REQUIRED: 'Due Date Required',
@@ -25,6 +26,7 @@ export const RULES = {
     NONE: 'None',
 };
 
+//function that takes an item and a list of rules to apply to that item
 export const updateItemByRules = (rules, item) => {
     //need to remove stuff if the rule doesn't apply anymore
     let updatedItem = item;
@@ -187,6 +189,7 @@ function addList(state, action) {
     return { ...state, lists: state.lists.push(newList) };
 }
 
+//function that modifies the rules of a list
 function addListRules(state, action) {
     const { list, newRules } = action.payload;
     // const rules = newRules.map(rule => {
@@ -326,6 +329,7 @@ function moveToList(state, action) {
         newBacklog = backlog.prepend(item);
     }
 
+    //on moving an item, the item is modified according to the rules of the list it is moving to
     const updatedItem = updateItemByRules(toList.rules, item);
 
     const updatedLists = lists.map(itemList => {

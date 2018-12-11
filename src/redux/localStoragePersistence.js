@@ -48,7 +48,6 @@ export function load() {
         loadedState.lists.lists = Immutable.List(
             jsState.lists.lists.map(listObject => {
                 const listItems = listObject.items.map(itemObj => new Item(itemObj));
-                console.log("list is loaded here from local storage: ", listObject.title, listObject.rules);
                 return new List({
                     id: listObject.id,
                     title: listObject.title,
@@ -152,6 +151,5 @@ export function load() {
         // ui
         loadedState.ui = jsState.ui;
     }
-    console.log("Tryna localize, by here this is my loadedState", loadedState.lists.lists);
     return loadedState;
 }

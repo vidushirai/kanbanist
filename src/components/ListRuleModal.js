@@ -3,6 +3,7 @@ import { RULES } from '../redux/modules/lists';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 
+//Drop down menu options based
 const options = [
   {value: RULES.DUE_DATE_REQUIRED, label: RULES.DUE_DATE_REQUIRED},
   {value: RULES.URGENT, label: RULES.URGENT},
@@ -19,6 +20,7 @@ export default class ListRuleModal extends React.Component {
     });
   }
 
+  //sets the state's value to the options that are currently selected
   handleChange = (selectedOptions) => {
     let selected = [];
     for (let i in selectedOptions){
@@ -30,6 +32,7 @@ export default class ListRuleModal extends React.Component {
     });
   };
 
+  //lists the default values to show the rules the list already has
   componentDidMount(){
     let defaultOptions = [];
     this.props.list.rules.map(rule => {

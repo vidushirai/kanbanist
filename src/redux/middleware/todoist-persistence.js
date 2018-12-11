@@ -175,6 +175,7 @@ const todoistPersistenceMiddleware = store => next => action => {
             break;
         
         case types.ADD_LIST_RULES:
+        //function that makes the changes to the all the items in a list when a rule is added
         function persistListItemChange() {
             const { list, newRules } = action.payload;
             list.items.map(el => {
