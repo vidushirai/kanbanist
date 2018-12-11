@@ -9,6 +9,7 @@ import Toolbar from './Toolbar';
 import ListsPanel from '../containers/ListsPanel';
 import { generateQueryString } from '../redux/middleware/trelloist-filter-url';
 import { NAMED_FILTERS } from '../redux/modules/lists';
+import { changeTheme } from '../redux/modules/ui';
 
 const MIN_SCREEN_SIZE = 740; // pixels
 
@@ -31,6 +32,11 @@ class Board extends Component {
                 history.push(pathname + queryString);
             }
         }
+
+        if (this.props.darkTheme) {
+            changeTheme();
+        }
+
     }
 
     render() {
@@ -233,6 +239,7 @@ const mapStateToProps = state => {
     return {
         showToolbar: state.ui.showToolbar,
         showBacklog: state.ui.showBacklog,
+        darkTheme: state.ui.darkTheme,
         backlogList: state.lists.backlog,
         lists: state.lists.lists,
         filteredLists: state.lists.filteredLists,

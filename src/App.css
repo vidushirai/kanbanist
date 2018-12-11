@@ -17,6 +17,7 @@
   --list-item-inner-bottom: #C23030;
   --list-item-spacer: #5C7080;
   --title-text: #30404D;
+  --item-text: #000000;
 }
 
 .App {
@@ -274,6 +275,8 @@ p {
   margin-bottom: 10px;
   max-width: 255px;
   flex: 1 auto 255px;
+  background-color: var(--bg-color);
+  color: var(--item-text);
 }
 
 .ListItem-inner {

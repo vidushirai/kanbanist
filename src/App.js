@@ -47,7 +47,7 @@ class App extends React.Component {
         return (
             <Router history={history}>
                 <div className="App">
-                    <Header history={history} />
+                    <Header history={history}/>
                     <div className="main-content">
                         <Switch>
                             {/* note: add new paths to netlify/_redirects */}

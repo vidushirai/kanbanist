@@ -148,6 +148,7 @@ export function load() {
 
         // ui
         loadedState.ui = jsState.ui;
+        console.log(loadedState.ui);
     }
 
     return loadedState;
